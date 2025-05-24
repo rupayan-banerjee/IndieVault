@@ -1,0 +1,68 @@
+[
+  {
+    "date": "2025-05-01",
+    "title": "Vue 3 Released",
+    "content": "Vue.js version 3 is officially released with Composition API.",
+    "category": "Tech"
+  },
+  {
+    "date": "2025-05-02",
+    "title": "Bootstrap 5 Update",
+    "content": "Bootstrap adds new responsive utilities in latest patch.",
+    "category": "Design"
+  },
+  {
+    "date": "2025-05-03",
+    "title": "University Hackathon",
+    "content": "Students gather to build innovative apps in 48 hours.",
+    "category": "Events"
+  },
+  {
+    "date": "2025-05-04",
+    "title": "JavaScript ES2025 Features",
+    "content": "New features in JavaScript ES2025 include top-level await and new array methods.",
+    "category": "Tech"
+  },
+  {
+    "date": "2025-05-05",
+    "title": "CSS Grid Layouts",
+    "content": "CSS Grid layouts become more popular for responsive design.",
+    "category": "Design"
+  },
+  {
+    "date": "2025-05-06",
+    "title": "Local Tech Meetup",
+    "content": "Join us for a local tech meetup to discuss the latest trends.",
+    "category": "Events"
+  },
+  {
+    "date": "2025-05-07",
+    "title": "React Native Update",
+    "content": "React Native introduces new performance improvements.",
+    "category": "Tech"
+  },
+  {
+    "date": "2025-05-08",
+    "title": "Figma Design Tips",
+    "content": "Learn how to use Figma for better UI/UX design.",
+    "category": "Design"
+  },
+  {
+    "date": "2025-05-09",
+    "title": "Global Coding Challenge",
+    "content": "Participate in a global coding challenge with prizes.",
+    "category": "Events"
+  },
+  {
+    "date": "2025-05-10",
+    "title": "Node.js Performance Boost",
+    "content": "Node.js gets a performance boost with the latest version.",
+    "category": "Tech"
+  },
+  {
+    "date": "2025-05-11",
+    "title": "Web Accessibility Standards",
+    "content": "New web accessibility standards are introduced to improve user experience.",
+    "category": "Design"
+  }
+]
