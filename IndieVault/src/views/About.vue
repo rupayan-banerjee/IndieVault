@@ -81,7 +81,21 @@ export default {
 </script>
 
 <style scoped>
+.about {
+    color: #f2f2f2;
+    /* Light text for dark background */
+}
+
 img {
     object-fit: cover;
+}
+
+/* Optional: enhance form labels and inputs */
+.form-label {
+    color: #ddd;
+}
+
+.form-check-label {
+    color: #ccc;
 }
 </style>
