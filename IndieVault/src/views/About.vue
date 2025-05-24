@@ -1,11 +1,11 @@
 <!-- src/views/About.vue -->
 <template>
     <div class="about">
-        <h2 class="text-center mb-4">About This Web Application</h2>
+        <h2 class="text-center mb-4">About IndieVault</h2>
 
         <p class="lead text-center">
-            This demo app is designed to showcase Vue.js 3, Bootstrap, and responsive UI principles. It includes
-            interactive components, routing, and dynamic content.
+            This website is designed to be a indie game web store, showcasing the latest indie games and news, as well
+            as providing a platform for indie developers to share their work and engage with the community.
         </p>
 
         <!-- Input Form -->
@@ -25,20 +25,24 @@
 
                 <!-- Dynamic welcome message -->
                 <div class="alert alert-primary mt-4" v-if="fullName">
-                    👋 Welcome, {{ fullName }}!
+                    Welcome, {{ fullName }}!
                 </div>
 
                 <!-- Radio selection -->
                 <div class="mt-4">
-                    <p>Select your favorite scenery:</p>
+                    <p>Select your favorite indie game:</p>
                     <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" id="mountain" value="mountain"
+                        <input class="form-check-input" type="radio" id="stardew" value="stardew"
                             v-model="selectedImage" />
-                        <label class="form-check-label" for="mountain">Mountain</label>
+                        <label class="form-check-label" for="stardew">Stardew Valley</label>
                     </div>
                     <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" id="ocean" value="ocean" v-model="selectedImage" />
-                        <label class="form-check-label" for="ocean">Ocean</label>
+                        <input class="form-check-input" type="radio" id="wilds" value="wilds" v-model="selectedImage" />
+                        <label class="form-check-label" for="wilds">Outer Wilds</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" id="hades" value="hades" v-model="selectedImage" />
+                        <label class="form-check-label" for="hades">Hades</label>
                     </div>
                 </div>
 
@@ -53,8 +57,9 @@
 </template>
 
 <script>
-import mountainImg from '../assets/mountain.jpg'
-import oceanImg from '../assets/ocean.jpg'
+import stardewImg from '../assets/stardew.jpg'
+import wildsImg from '../assets/wilds.jpg'
+import hadesImg from '../assets/hades.jpg'
 
 export default {
     name: 'About',
@@ -74,7 +79,9 @@ export default {
         },
         imageUrl() {
             // Use URLs or local paths — adjust if using your own assets
-            return this.selectedImage === 'mountain' ? mountainImg : oceanImg
+            return this.selectedImage === 'stardew' ? stardewImg
+                : this.selectedImage === 'wilds' ? wildsImg
+                    : this.selectedImage === 'hades' ? hadesImg : ''
         }
     }
 }
@@ -84,6 +91,8 @@ export default {
 .about {
     color: #f2f2f2;
     /* Light text for dark background */
+    padding-bottom: 4rem;
+    /* Add some padding at the bottom */
 }
 
 img {
