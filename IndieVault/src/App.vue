@@ -1,17 +1,24 @@
 <template>
   <div class="app-wrapper">
-    <!-- Modern Glassy Navbar -->
+    <!-- Top Navbar -->
     <nav class="navbar navbar-expand-lg shadow-sm glassy-nav fixed-top rounded-3 mx-3 mt-3">
       <div class="container-fluid">
-        <router-link class="navbar-brand fw-bold" to="/">IndieVault</router-link>
+        <!-- Brand Logo and Name, links to Home -->
+        <router-link class="navbar-brand d-flex align-items-center gap-2" to="/">
+          <img src="./assets/logo.png" alt="IndieVault Logo" height="28" />
+          <span class="fw-bold">IndieVault</span>
+        </router-link>
 
+        <!-- Hamburger menu toggle for mobile -->
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
           aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
 
+        <!-- Collapsible nav items -->
         <div class="collapse navbar-collapse" id="navbarNav">
           <ul class="navbar-nav ms-auto">
+            <!-- Navigation links -->
             <li class="nav-item">
               <router-link class="nav-link" to="/">Home</router-link>
             </li>
@@ -26,7 +33,7 @@
       </div>
     </nav>
 
-    <!-- Page content -->
+    <!-- Main view content rendered based on current route -->
     <div class="container">
       <router-view />
     </div>
@@ -40,7 +47,7 @@ export default {
 </script>
 
 <style>
-/* ===== Page background ===== */
+/* ===== Global Page Background ===== */
 body {
   margin: 0;
   padding: 0;
@@ -49,38 +56,44 @@ body {
 .app-wrapper {
   min-height: 100vh;
   background: linear-gradient(to bottom right, #1e1e2f, #2c2c38);
+  /* dark theme gradient */
   padding-top: 80px;
+  /* space for fixed navbar */
 }
 
-/* ===== Glassy Navbar ===== */
+/* Glassy Navbar Style */
 .glassy-nav {
   background: rgba(255, 255, 255, 0.08);
-  backdrop-filter: blur(10px);
+  /* semi-transparent white */
+  backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(14px);
   border: 1px solid rgba(255, 255, 255, 0.15);
+  /* subtle border */
 }
 
-/* ===== Navbar Link Styling ===== */
+/* Navigation Link Styling */
 .navbar-brand,
 .nav-link {
   color: white !important;
   font-weight: 500;
   text-shadow: 0 0 3px rgba(0, 0, 0, 0.4);
+  /* subtle glow for contrast */
   border-radius: 10px;
-  /* pill shape */
+  /* slightly rounded edges */
   padding: 6px 16px;
   transition: all 0.3s ease;
 }
 
-/* Hover or active state */
+/* Highlight active or hovered links */
 .nav-link:hover,
 .router-link-exact-active.nav-link {
   background-color: rgba(255, 255, 255, 0.1);
+  /* soft highlight */
   color: white !important;
   text-decoration: none !important;
 }
 
-/* Remove outline around hamburger button */
+/* Hamburger Menu Button Style */
 .navbar-toggler {
   border: none;
   outline: none !important;
@@ -88,16 +101,16 @@ body {
   padding: 0.25rem 0.5rem;
 }
 
-/* Hamburger icon visibility on dark background */
+/* Ensure hamburger icon is visible on dark backgrounds */
 .navbar-toggler-icon {
   filter: brightness(0) invert(1);
 }
 
-/* Align dropdown items with brand on mobile */
+/* Mobile-Specific Styling */
 @media (max-width: 991.98px) {
   .navbar-collapse {
     padding-left: 1.5rem;
-    /* Match brand’s natural position */
+    /* aligns with brand text */
   }
 
   .navbar-nav .nav-link {
@@ -112,6 +125,7 @@ body {
   .navbar-nav .nav-link:hover,
   .navbar-nav .router-link-exact-active.nav-link {
     background-color: rgba(255, 255, 255, 0.12);
+    /* highlight nav items on mobile */
     color: white !important;
   }
 }

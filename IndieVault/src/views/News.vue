@@ -1,14 +1,15 @@
-<!-- src/views/News.vue -->
 <template>
     <div class="news">
+        <!-- Page heading -->
         <h2 class="text-center mb-4">Latest News</h2>
 
-        <!-- Search input -->
+        <!-- Search box to filter news by keyword -->
         <input v-model="searchQuery" type="text" class="form-control mb-4"
             placeholder="Search news by title, content, date, or category" />
 
-        <!-- News list -->
+        <!-- News cards list -->
         <div class="row">
+            <!-- Each card represents a news item -->
             <div class="col-md-6 mb-4" v-for="item in paginatedNews" :key="item.title">
                 <div class="card shadow-sm h-100">
                     <div class="card-body">
@@ -20,30 +21,37 @@
             </div>
         </div>
 
-        <!-- Pagination controls -->
+        <!-- Pagination buttons -->
         <div class="d-flex justify-content-center mt-4">
-            <button class="btn btn-outline-primary me-2" :disabled="currentPage === 1"
-                @click="currentPage--">Previous</button>
-            <button class="btn btn-outline-primary" :disabled="currentPage === totalPages"
-                @click="currentPage++">Next</button>
+            <!-- Go to previous page if not on first -->
+            <button class="btn btn-outline-primary me-2" :disabled="currentPage === 1" @click="currentPage--">
+                Previous
+            </button>
+
+            <!-- Go to next page if not on last -->
+            <button class="btn btn-outline-primary" :disabled="currentPage === totalPages" @click="currentPage++">
+                Next
+            </button>
         </div>
     </div>
 </template>
 
 <script>
+// Import local JSON data for news
 import newsData from '../assets/news.json'
 
 export default {
     name: 'News',
     data() {
         return {
-            newsList: newsData,
-            searchQuery: '',
-            currentPage: 1,
-            itemsPerPage: 4
+            newsList: newsData,      // Raw news array from JSON
+            searchQuery: '',         // Search input bound here
+            currentPage: 1,          // Current page number
+            itemsPerPage: 4          // How many items to show per page
         }
     },
     computed: {
+        // Filters news based on search input across all fields
         filteredNews() {
             const query = this.searchQuery.toLowerCase()
             return this.newsList.filter(item =>
@@ -53,10 +61,12 @@ export default {
                 item.date.toLowerCase().includes(query)
             )
         },
+        // Returns only a subset of news items for the current page
         paginatedNews() {
             const start = (this.currentPage - 1) * this.itemsPerPage
             return this.filteredNews.slice(start, start + this.itemsPerPage)
         },
+        // Calculates how many pages are needed based on filtered results
         totalPages() {
             return Math.ceil(this.filteredNews.length / this.itemsPerPage)
         }
@@ -67,9 +77,10 @@ export default {
 <style scoped>
 .news {
     color: #f2f2f2;
+    /* Base text color on dark background */
 }
 
-/* Glassy news card style */
+/* News card with glassy styling */
 .card {
     background: rgba(255, 255, 255, 0.05);
     border: 1px solid rgba(255, 255, 255, 0.1);
@@ -85,16 +96,18 @@ export default {
     box-shadow: 0 0 12px rgba(0, 0, 0, 0.3);
 }
 
-/* Card title and subtitle */
+/* Title styling */
 .card-title {
     color: #ffffff;
 }
 
+/* Subtitle (date + category) */
 .card-subtitle {
     color: #e2dd35 !important;
+    /* Bright yellow for contrast */
 }
 
-/* Glassy buttons */
+/* Glassy buttons used in pagination */
 button.btn {
     color: #f0f0f0;
     border: 1px solid rgba(255, 255, 255, 0.2);
@@ -106,17 +119,19 @@ button.btn {
     transition: all 0.3s ease;
 }
 
+/* Hover effect for pagination buttons */
 button.btn:hover:not(:disabled) {
     background-color: rgba(255, 255, 255, 0.12);
     color: white;
 }
 
+/* Disabled state */
 button.btn:disabled {
     opacity: 0.5;
     cursor: not-allowed;
 }
 
-/* Search input */
+/* Custom styling for search bar */
 input.form-control {
     background-color: rgba(255, 255, 255, 0.05);
     border: 1px solid rgba(255, 255, 255, 0.2);
