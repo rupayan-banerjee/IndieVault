@@ -28,6 +28,20 @@
             <li class="nav-item">
               <router-link class="nav-link" to="/about">About</router-link>
             </li>
+
+            <!-- Only show when NOT logged in -->
+            <li class="nav-item" v-if="!isLoggedIn">
+              <router-link class="nav-link" to="/login">Login</router-link>
+            </li>
+            <li class="nav-item" v-if="!isLoggedIn">
+              <router-link class="nav-link" to="/register">Register</router-link>
+            </li>
+
+            <!-- Only show when logged in -->
+            <li class="nav-item d-flex align-items-center gap-2" v-else>
+              <span class="nav-link user-name">Hi, {{ currentUser?.name }}</span>
+              <button class="btn btn-sm btn-outline-light" @click="logout">Logout</button>
+            </li>
           </ul>
         </div>
       </div>
@@ -41,8 +55,27 @@
 </template>
 
 <script>
+import { computed } from 'vue'
+import auth from './store/auth'
+
 export default {
-  name: 'App'
+  name: 'App',
+  setup() {
+    const isLoggedIn = computed(() => auth.isLoggedIn.value)
+    const currentUser = computed(() => auth.state.currentUser)
+
+    const logout = () => {
+      auth.logout()
+      window.location.reload()
+    }
+
+    return {
+      auth,         // still exporting full auth for debugging or future use
+      isLoggedIn,
+      currentUser,
+      logout
+    }
+  }
 }
 </script>
 
