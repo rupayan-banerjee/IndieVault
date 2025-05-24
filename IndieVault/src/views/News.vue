@@ -31,7 +31,7 @@
 </template>
 
 <script>
-import newsData from '@/assets/news.json'
+import newsData from '../assets/news.json'
 
 export default {
     name: 'News',

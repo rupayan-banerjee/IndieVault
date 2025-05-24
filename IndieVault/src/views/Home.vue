@@ -10,12 +10,12 @@
         <div class="row mt-5">
             <!-- First image -->
             <div class="col-md-6 mb-4">
-                <img src="@/assets/image1.jpg" alt="Sample 1" class="img-fluid rounded shadow" />
+                <img src="../assets/image1.jpg" alt="Sample 1" class="img-fluid rounded shadow" />
             </div>
 
             <!-- Second image -->
             <div class="col-md-6 mb-4">
-                <img src="@/assets/image2.jpg" alt="Sample 2" class="img-fluid rounded shadow" />
+                <img src="../assets/image2.jpg" alt="Sample 2" class="img-fluid rounded shadow" />
             </div>
         </div>
     </div>
