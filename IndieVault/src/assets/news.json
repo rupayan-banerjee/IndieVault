@@ -1,68 +1,68 @@
 [
   {
     "date": "2025-05-01",
-    "title": "Vue 3 Released",
-    "content": "Vue.js version 3 is officially released with Composition API.",
-    "category": "Tech"
+    "title": "PixelQuest Launches Worldwide",
+    "content": "The much-anticipated retro-platformer PixelQuest is now live on IndieVault.",
+    "category": "Release"
   },
   {
     "date": "2025-05-02",
-    "title": "Bootstrap 5 Update",
-    "content": "Bootstrap adds new responsive utilities in latest patch.",
-    "category": "Design"
+    "title": "Dev Spotlight: Luna Studio",
+    "content": "We talk to Luna Studio about their hand-drawn RPG and their journey as first-time indie devs.",
+    "category": "Community"
   },
   {
     "date": "2025-05-03",
-    "title": "University Hackathon",
-    "content": "Students gather to build innovative apps in 48 hours.",
-    "category": "Events"
+    "title": "IndieVault Monthly Game Jam Starts",
+    "content": "Join the May Game Jam and build a playable prototype in 7 days!",
+    "category": "Event"
   },
   {
     "date": "2025-05-04",
-    "title": "JavaScript ES2025 Features",
-    "content": "New features in JavaScript ES2025 include top-level await and new array methods.",
-    "category": "Tech"
+    "title": "Tool Update: VoxelForge 2.0",
+    "content": "VoxelForge, the voxel-based world builder, releases version 2.0 with better export support.",
+    "category": "Tools"
   },
   {
     "date": "2025-05-05",
-    "title": "CSS Grid Layouts",
-    "content": "CSS Grid layouts become more popular for responsive design.",
-    "category": "Design"
+    "title": "Behind the Pixels: Soundtrack Creation Tips",
+    "content": "Veteran devs share how to compose music that enhances immersion in your game.",
+    "category": "Dev Tips"
   },
   {
     "date": "2025-05-06",
-    "title": "Local Tech Meetup",
-    "content": "Join us for a local tech meetup to discuss the latest trends.",
-    "category": "Events"
+    "title": "Tiny Titans Now Available",
+    "content": "Battle with quirky mini-warriors in the new PvP indie hit Tiny Titans.",
+    "category": "Release"
   },
   {
     "date": "2025-05-07",
-    "title": "React Native Update",
-    "content": "React Native introduces new performance improvements.",
-    "category": "Tech"
+    "title": "Community Picks: Top 5 Underrated Games",
+    "content": "Our community voted — check out these hidden gems you might have missed.",
+    "category": "Community"
   },
   {
     "date": "2025-05-08",
-    "title": "Figma Design Tips",
-    "content": "Learn how to use Figma for better UI/UX design.",
-    "category": "Design"
+    "title": "Funding Friday: Pitch Your Game",
+    "content": "Submit your project pitch this Friday for a chance to win community funding.",
+    "category": "Event"
   },
   {
     "date": "2025-05-09",
-    "title": "Global Coding Challenge",
-    "content": "Participate in a global coding challenge with prizes.",
-    "category": "Events"
+    "title": "ArtStyle Wars Challenge Begins",
+    "content": "Experiment with different art styles and submit your short demo by next week!",
+    "category": "Event"
   },
   {
     "date": "2025-05-10",
-    "title": "Node.js Performance Boost",
-    "content": "Node.js gets a performance boost with the latest version.",
-    "category": "Tech"
+    "title": "Dev Diary: Crafting Narrative in EchoVale",
+    "content": "Go behind the scenes with the devs of EchoVale as they build their branching storylines.",
+    "category": "Dev Diary"
   },
   {
     "date": "2025-05-11",
-    "title": "Web Accessibility Standards",
-    "content": "New web accessibility standards are introduced to improve user experience.",
-    "category": "Design"
+    "title": "Asset Marketplace Beta Launches",
+    "content": "Upload, browse, and purchase community-made assets in the new IndieVault Marketplace.",
+    "category": "Update"
   }
 ]
