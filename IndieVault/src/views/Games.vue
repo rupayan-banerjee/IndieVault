@@ -3,8 +3,7 @@
         <h2 class="text-center mb-4">Discover Indie Games</h2>
 
         <!-- Filter Section -->
-        <div
-            class="filter-wrapper d-flex flex-column flex-md-row align-items-md-center justify-content-md-center gap-3 mb-5">
+        <div class="filter-wrapper d-flex flex-wrap justify-content-center align-items-center gap-3 mb-5">
             <input type="text" v-model="searchQuery" class="custom-filter-input"
                 placeholder="Search by title or description" />
             <select v-model="selectedGenre" class="custom-filter-select">
