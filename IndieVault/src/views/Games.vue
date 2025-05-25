@@ -3,19 +3,14 @@
         <h2 class="text-center mb-4">Discover Indie Games</h2>
 
         <!-- Filter Section -->
-        <div class="row mb-4">
-            <div class="col-md-6 mb-2">
-                <input type="text" v-model="searchQuery" class="form-control"
-                    placeholder="Search by title or description" />
-            </div>
-            <div class="col-md-6 mb-2">
-                <select v-model="selectedGenre" class="form-select">
-                    <option value="">All Genres</option>
-                    <option v-for="genre in uniqueGenres" :key="genre" :value="genre">
-                        {{ genre }}
-                    </option>
-                </select>
-            </div>
+        <div
+            class="filter-wrapper d-flex flex-column flex-md-row align-items-md-center justify-content-md-center gap-3 mb-5">
+            <input type="text" v-model="searchQuery" class="custom-filter-input"
+                placeholder="Search by title or description" />
+            <select v-model="selectedGenre" class="custom-filter-select">
+                <option value="">All Genres</option>
+                <option v-for="genre in uniqueGenres" :key="genre" :value="genre">{{ genre }}</option>
+            </select>
         </div>
 
         <div class="mb-4 text-end" v-if="isAdmin">
@@ -149,14 +144,36 @@
 </template>
 
 <script>
-import gameData from '../assets/games.json'
+import fallbackGames from '../assets/games.json'
 import auth from '../store/auth'
 import { reactive, ref, computed, watch } from 'vue'
 
 export default {
     name: 'Games',
     setup() {
-        const games = reactive(gameData.map(g => ({ ...g })))
+        // inside setup(), before any use of `games`
+        const storageKey = 'indievaultGames'
+
+        // Try to load from localStorage (must be an array)
+        let initial = []
+        try {
+            const raw = localStorage.getItem(storageKey)
+            if (raw) {
+                const parsed = JSON.parse(raw)
+                if (Array.isArray(parsed)) initial = parsed
+            }
+        } catch { }  // ignore parse errors
+
+        // If nothing in storage, use fallbackGames
+        const games = ref(
+            initial.length
+                ? initial
+                : fallbackGames.map(g => ({ ...g }))
+        )
+
+        watch(games, (updated) => {
+            localStorage.setItem(storageKey, JSON.stringify(updated))
+        }, { deep: true })
         const searchQuery = ref('')
         const selectedGenre = ref('')
         const currentlyEditing = ref(null)
@@ -176,13 +193,12 @@ export default {
 
         // List of unique genres from games
         const uniqueGenres = computed(() => {
-            const genres = games.map(g => g.genre)
-            return [...new Set(genres)]
+            return [...new Set(games.value.map(g => g.genre))]
         })
 
         // Computed filtered games
         const filteredGames = computed(() => {
-            return games.filter(game => {
+            return games.value.filter(game => {
                 const matchesSearch =
                     game.title.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
                     game.description.toLowerCase().includes(searchQuery.value.toLowerCase())
@@ -226,9 +242,9 @@ export default {
         const isAdmin = computed(() => auth.state.currentUser?.role === 'admin')
 
         const deleteGame = (game) => {
-            const index = games.findIndex(g => g.id === game.id)
+            const index = games.value.findIndex(g => g.id === game.id)
             if (index !== -1) {
-                games.splice(index, 1)
+                games.value.splice(index, 1)
                 localStorage.setItem('gameList', JSON.stringify(games))
             }
         }
@@ -238,10 +254,9 @@ export default {
         }
 
         const saveEdit = () => {
-            const index = games.findIndex(g => g.id === currentlyEditing.value.id)
+            const index = games.value.findIndex(g => g.id === currentlyEditing.value.id)
             if (index !== -1) {
-                games[index] = { ...currentlyEditing.value }
-                localStorage.setItem('gameList', JSON.stringify(games))
+                games.value.splice(index, 1, { ...currentlyEditing.value })
             }
             currentlyEditing.value = null
         }
@@ -271,7 +286,7 @@ export default {
                 return
             }
 
-            const newId = Math.max(...games.map(g => g.id)) + 1
+            const newId = Math.max(...games.value.map(g => g.id)) + 1
             const gameToAdd = {
                 id: newId,
                 title: newGame.title.trim(),
@@ -282,7 +297,7 @@ export default {
                 wishlisted: false
             }
 
-            games.push(gameToAdd)
+            games.value.push(gameToAdd)
             localStorage.setItem('gameList', JSON.stringify(games))
 
             // Reset form
@@ -437,5 +452,34 @@ export default {
 .no-reviews-text {
     color: #bbb;
     font-style: italic;
+}
+
+.filter-wrapper {
+    margin-bottom: 2rem;
+    gap: 1rem;
+}
+
+.custom-filter-input,
+.custom-filter-select {
+    background-color: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: #f2f2f2;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    backdrop-filter: blur(4px);
+    transition: border 0.3s ease, background 0.3s ease;
+    width: 100%;
+    max-width: 300px;
+}
+
+.custom-filter-input::placeholder {
+    color: #aaa;
+}
+
+.custom-filter-input:focus,
+.custom-filter-select:focus {
+    outline: none;
+    border-color: rgba(255, 255, 255, 0.4);
+    background-color: rgba(255, 255, 255, 0.08);
 }
 </style>

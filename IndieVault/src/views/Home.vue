@@ -7,7 +7,8 @@
                 <h1 class="display-5 fw-bold hero-title">Welcome to IndieVault!</h1>
                 <!-- Short welcoming description -->
                 <p class="lead hero-subtext">
-                    This is just the starting point of something much more exciting.
+                    Your ultimate destination for indie games, news, and community. Explore, play, and connect with
+                    fellow gamers.
                 </p>
             </div>
         </section>
