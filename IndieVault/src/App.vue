@@ -15,10 +15,9 @@
           <span class="navbar-toggler-icon"></span>
         </button>
 
-        <!-- Collapsible nav items -->
         <div class="collapse navbar-collapse" id="navbarNav">
           <ul class="navbar-nav ms-auto">
-            <!-- Navigation links -->
+            <!-- Main links -->
             <li class="nav-item">
               <router-link class="nav-link" to="/">Home</router-link>
             </li>
@@ -32,19 +31,27 @@
               <router-link class="nav-link" to="/about">About</router-link>
             </li>
 
-            <!-- Only show when NOT logged in -->
-            <li class="nav-item" v-if="!isLoggedIn">
-              <router-link class="nav-link" to="/login">Login</router-link>
-            </li>
-            <li class="nav-item" v-if="!isLoggedIn">
-              <router-link class="nav-link" to="/register">Register</router-link>
-            </li>
+            <!-- When NOT logged in -->
+            <template v-if="!isLoggedIn">
+              <li class="nav-item">
+                <router-link class="nav-link" to="/login">Login</router-link>
+              </li>
+              <li class="nav-item">
+                <router-link class="nav-link" to="/register">Register</router-link>
+              </li>
+            </template>
 
-            <!-- Only show when logged in -->
-            <li class="nav-item d-flex align-items-center gap-2" v-else>
-              <span class="nav-link user-name">Hi, {{ currentUser?.name }}</span>
-              <button class="btn btn-sm btn-outline-light" @click="logout">Logout</button>
-            </li>
+            <!-- When logged in -->
+            <template v-else>
+              <li class="nav-item d-flex align-items-center gap-2">
+                <router-link class="nav-link user-name" to="/profile">
+                  Hi, {{ currentUser.name }}
+                </router-link>
+                <button class="btn btn-sm btn-outline-light" @click="logout">
+                  Logout
+                </button>
+              </li>
+            </template>
           </ul>
         </div>
       </div>
@@ -58,6 +65,7 @@
 </template>
 
 <script>
+import { useRouter } from 'vue-router'
 import { computed } from 'vue'
 import auth from './store/auth'
 
@@ -66,9 +74,11 @@ export default {
   setup() {
     const isLoggedIn = computed(() => auth.isLoggedIn.value)
     const currentUser = computed(() => auth.state.currentUser)
+    const router = useRouter()
 
     const logout = () => {
       auth.logout()
+      router.push('/')
       window.location.reload()
     }
 
