@@ -4,9 +4,11 @@
 
         <!-- Filter Section -->
         <div class="filter-wrapper d-flex flex-wrap justify-content-center align-items-center gap-3 mb-5">
+            <label for="searchInput" class="visually-hidden">Search games</label>
             <input type="text" v-model="searchQuery" class="custom-filter-input"
-                placeholder="Search by title or description" />
-            <select v-model="selectedGenre" class="custom-filter-select">
+                placeholder="Search by title or description" aria-label="Search games by title or description" />
+            <label for="genreSelect" class="visually-hidden">Filter by genre</label>
+            <select v-model="selectedGenre" class="custom-filter-select" aria-label="Filter games by genre">
                 <option value="">All Genres</option>
                 <option v-for="genre in uniqueGenres" :key="genre" :value="genre">{{ genre }}</option>
             </select>
@@ -23,8 +25,8 @@
             <h4 class="mb-3">Add New Game</h4>
             <form @submit.prevent="addGame">
                 <div class="mb-2">
-                    <label class="form-label">Title</label>
-                    <input v-model="newGame.title" class="form-control"
+                    <label class="form-label" for="newGameTitle">Title</label>
+                    <input id="newGameTitle" v-model="newGame.title" class="form-control"
                         :class="{ 'is-invalid': validationErrors.title }" />
                     <div class="invalid-feedback">Title is required.</div>
                 </div>
@@ -64,6 +66,7 @@
                         <button class="btn btn-sm" :class="auth.state.currentUser
                             ? (hasLiked(game.id) ? 'btn-danger' : 'btn-outline-light')
                             : 'btn-outline-light disabled'" @click="auth.state.currentUser && toggleLike(game)"
+                            :arialabel="hasLiked(game.id) ? `Unlike ${game.title}` : `Like ${game.title}`"
                             :aria-disabled="!auth.state.currentUser">
                             {{ auth.state.currentUser && hasLiked(game.id) ? '❤️' : '🤍' }}
                             {{ game.likes }}
@@ -125,6 +128,7 @@
                                 <!-- Review input -->
                                 <div v-if="reviewInputVisibleMap[game.id]" class="mt-2">
                                     <textarea v-model="newReviewTextMap[game.id]" class="form-control mb-2" rows="2"
+                                        :aria-label="`Write a review for ${game.title}`"
                                         placeholder="Write your review..."></textarea>
                                     <button class="btn btn-sm btn-primary"
                                         @click="submitReview(game.id)">Submit</button>
@@ -148,7 +152,7 @@
             </button>
         </div>
         <transition name="toast">
-            <div v-if="showToast" class="custom-toast">
+            <div v-if="showToast" class="custom-toast" aria-live="assertive">
                 {{ toastMessage }}
             </div>
         </transition>
@@ -648,5 +652,14 @@ export default {
     font-style: italic;
     opacity: 0.9;
     margin-top: 0.25rem;
+}
+
+.visually-hidden {
+    position: absolute;
+    left: -9999px;
+    top: auto;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
 }
 </style>

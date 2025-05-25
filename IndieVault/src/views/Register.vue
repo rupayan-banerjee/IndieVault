@@ -9,37 +9,48 @@
         </section>
 
         <!-- Glassy registration form -->
-        <form @submit.prevent="handleRegister" class="glass-card p-4 mx-auto" style="max-width: 400px;">
-            <!-- Name -->
+        <form @submit.prevent="handleRegister" class="glass-card p-4 mx-auto" style="max-width: 400px;"
+            aria-label="Registration form"> <!-- Name -->
             <div class="mb-3">
                 <label for="name" class="form-label custom-label">Name</label>
-                <input v-model="name" type="text" id="name" class="form-control custom-input" required />
+                <input v-model="name" type="text" id="name" class="form-control custom-input" required
+                    aria-describedby="nameHelp" autocomplete="name" />
+                <small id="nameHelp" class="form-text text-muted visually-hidden">
+                    Enter your full name.
+                </small>
             </div>
 
             <!-- Email -->
             <div class="mb-3">
                 <label for="email" class="form-label custom-label">Email</label>
-                <input v-model="email" type="email" id="email" class="form-control custom-input" required />
+                <input v-model="email" type="email" id="email" class="form-control custom-input" required
+                    aria-describedby="emailHelp" autocomplete="email" />
+                <small id="nameHelp" class="form-text text-muted visually-hidden">
+                    Enter your email.
+                </small>
             </div>
 
             <!-- Password -->
             <div class="mb-3">
                 <label for="password" class="form-label custom-label">Password</label>
                 <input v-model="password" type="password" id="password" class="form-control custom-input" required
-                    minlength="4" />
+                    minlength="4" aria-describedby="passwordHelp" autocomplete="new-password" />
+                <small id="nameHelp" class="form-text text-muted visually-hidden">
+                    Enter the password.
+                </small>
             </div>
 
             <!-- Role selector -->
             <div class="mb-3">
                 <label class="form-label custom-label">Register as:</label>
-                <select v-model="role" class="form-select custom-input">
+                <select v-model="role" class="form-select custom-input" aria-label="Select user role">
                     <option value="user">Regular User</option>
                     <option value="admin">Admin</option>
                 </select>
             </div>
 
             <!-- Error message -->
-            <div v-if="errorMessage" class="alert custom-alert">
+            <div v-if="errorMessage" class="alert custom-alert" role="alert">
                 {{ errorMessage }}
             </div>
 

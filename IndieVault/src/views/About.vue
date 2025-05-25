@@ -25,29 +25,35 @@
                                 <div class="mb-3">
                                     <label for="firstName" class="form-label">First Name</label>
                                     <input id="firstName" v-model="firstName" type="text"
-                                        class="form-control custom-input" />
+                                        class="form-control custom-input" autocomplete="given-name" />
                                 </div>
 
                                 <div class="mb-3">
                                     <label for="lastName" class="form-label">Last Name</label>
                                     <input id="lastName" v-model="lastName" type="text"
-                                        class="form-control custom-input" />
+                                        class="form-control custom-input" autocomplete="family-name" />
                                 </div>
                             </form>
 
                             <!-- Dynamic greeting that shows up only if a name is entered -->
-                            <div class="alert alert-primary mt-4" v-if="fullName">
+                            <div class="alert alert-primary mt-4" v-if="fullName" aria-live="polite">
                                 Welcome, {{ fullName }}!
                             </div>
 
                             <!-- Favorite indie game selection using radio buttons -->
                             <div class="mt-4">
-                                <p class="mb-2">Select your favorite indie game:</p>
-                                <div class="form-check form-check-inline" v-for="game in games" :key="game.value">
-                                    <input class="form-check-input" type="radio" :id="game.value" :value="game.value"
-                                        v-model="selectedImage" />
-                                    <label class="form-check-label" :for="game.value">{{ game.label }}</label>
-                                </div>
+                                <!-- Wrap in fieldset for accessibility -->
+                                <fieldset>
+                                    <legend class="mb-2" id="gameLegend">Select your favorite indie game:</legend>
+                                    <div class="form-check form-check-inline" v-for="game in games" :key="game.value">
+                                        <input class="form-check-input" type="radio" :id="game.value"
+                                            :value="game.value" v-model="selectedImage"
+                                            :aria-labelledby="`label-${game.value}`" :aria-describedby="'gameLegend'" />
+                                        <label class="form-check-label" :id="`label-${game.value}`" :for="game.value">
+                                            {{ game.label }}
+                                        </label>
+                                    </div>
+                                </fieldset>
                             </div>
 
                             <!-- Preview image of the selected indie game -->

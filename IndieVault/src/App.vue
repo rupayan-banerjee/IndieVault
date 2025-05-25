@@ -1,10 +1,12 @@
 <template>
   <div class="app-wrapper">
     <!-- Top Navbar -->
-    <nav class="navbar navbar-expand-lg shadow-sm glassy-nav fixed-top rounded-3 mx-3 mt-3">
+    <nav class="navbar navbar-expand-lg shadow-sm glassy-nav fixed-top rounded-3 mx-3 mt-3"
+      aria-label="Main Navigation">
       <div class="container-fluid">
         <!-- Brand Logo and Name, links to Home -->
-        <router-link class="navbar-brand d-flex align-items-center gap-2" to="/">
+        <router-link class="navbar-brand d-flex align-items-center gap-2" to="/"
+          exact-active-class="router-link-exact-active" aria-current="page" aria-label="Go to Home">
           <img src="./assets/logo.png" alt="IndieVault Logo" height="28" />
           <span class="fw-bold">IndieVault</span>
         </router-link>
@@ -19,32 +21,39 @@
           <ul class="navbar-nav ms-auto">
             <!-- Main links -->
             <li class="nav-item">
-              <router-link class="nav-link" to="/">Home</router-link>
+              <router-link class="nav-link" to="/" exact-active-class="router-link-exact-active"
+                aria-current="page">Home</router-link>
             </li>
             <li class="nav-item">
-              <router-link class="nav-link" to="/games">Games</router-link>
+              <router-link class="nav-link" to="/games" exact-active-class="router-link-exact-active"
+                aria-current="page">Games</router-link>
             </li>
             <li class="nav-item">
-              <router-link class="nav-link" to="/news">News</router-link>
+              <router-link class="nav-link" to="/news" exact-active-class="router-link-exact-active"
+                aria-current="page">News</router-link>
             </li>
             <li class="nav-item">
-              <router-link class="nav-link" to="/about">About</router-link>
+              <router-link class="nav-link" to="/about" exact-active-class="router-link-exact-active"
+                aria-current="page">About</router-link>
             </li>
 
             <!-- When not logged in -->
             <template v-if="!isLoggedIn">
               <li class="nav-item">
-                <router-link class="nav-link" to="/login">Login</router-link>
+                <router-link class="nav-link" to="/login" exact-active-class="router-link-exact-active"
+                  aria-current="page">Login</router-link>
               </li>
               <li class="nav-item">
-                <router-link class="nav-link" to="/register">Register</router-link>
+                <router-link class="nav-link" to="/register" exact-active-class="router-link-exact-active"
+                  aria-current="page">Register</router-link>
               </li>
             </template>
 
             <!-- When logged in -->
             <template v-else>
               <li class="nav-item d-flex align-items-center gap-2">
-                <router-link class="nav-link user-name" to="/profile">
+                <router-link class="nav-link user-name" to="/profile" exact-active-class="router-link-exact-active"
+                  aria-current="page">
                   Hi, {{ currentUser.name }}
                 </router-link>
                 <button class="btn btn-sm btn-outline-light" @click="logout">

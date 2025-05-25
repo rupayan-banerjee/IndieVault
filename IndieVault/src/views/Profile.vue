@@ -5,18 +5,21 @@
         <p class="text-muted">Role: {{ user.role }}</p>
 
         <!-- Wishlist section -->
-        <h3 class="mt-4">Your Wishlist</h3>
-        <div v-if="wishlistGames.length" class="row">
+        <h3 class="mt-4" aria-label="User's Wishlist Section">Your Wishlist</h3>
+        <div v-if="wishlistGames.length" class="row" role="region" aria-label="Wishlist Game Cards">
             <div class="col-md-4 mb-4" v-for="game in wishlistGames" :key="game.id">
-                <div class="card h-100 glass-card">
-                    <img :src="getCover(game.cover)" :alt="game.title" class="card-img-top rounded" />
+                <article class="card h-100 glass-card" :aria-labelledby="`wishlist-title-${game.id}`">
+                    <img :src="getCover(game.cover)" :alt="`Cover image for ${game.title}`" class="card-img-top rounded"
+                        role="img" />
                     <div class="card-body">
-                        <h5 class="card-title">{{ game.title }}</h5>
+                        <h5 class="card-title" :id="`wishlist-title-${game.id}`">{{ game.title }}</h5>
                     </div>
-                </div>
+                </article>
             </div>
         </div>
-        <div v-else class="text-muted">You have no games in your wishlist.</div>
+        <div v-else class="text-muted" role="alert" aria-live="polite">
+            You have no games in your wishlist.
+        </div>
     </div>
 </template>
 

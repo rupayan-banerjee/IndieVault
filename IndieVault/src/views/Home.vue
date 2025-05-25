@@ -20,14 +20,16 @@
                     <!-- First image card -->
                     <div class="col-md-5 col-sm-8 mb-4">
                         <div class="card image-card border-0">
-                            <img src="../assets/image1.jpg" class="card-img-top rounded" alt="Gaming Controller 1" />
+                            <img src="../assets/image1.jpg" class="card-img-top rounded"
+                                alt="Gameplay of the game Hades" />
                         </div>
                     </div>
 
                     <!-- Second image card -->
                     <div class="col-md-5 col-sm-8 mb-4">
                         <div class="card image-card border-0">
-                            <img src="../assets/image2.jpg" class="card-img-top rounded" alt="Gaming Controller 2" />
+                            <img src="../assets/image2.jpg" class="card-img-top rounded"
+                                alt="Gameplay of the game Stardew Valley" />
                         </div>
                     </div>
                 </div>
