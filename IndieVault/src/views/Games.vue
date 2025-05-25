@@ -53,120 +53,110 @@
         </div>
 
         <!-- Game grid -->
-        <div class="row">
-            <div class="col-md-4 mb-4" v-for="game in paginatedGames" :key="game.id">
-                <div class="card h-100 glass-card">
-                    <img :src="getCover(game.cover)" class="card-img-top" :alt="game.title" />
+        <draggable v-model="games" tag="div" class="row" item-key="id" @start="onStart" @end="onEnd">
+            <template #item="{ element: game }">
+                <div class="col-md-4 mb-4" :key="game.id">
+                    <div class="card h-100 glass-card">
+                        <img :src="getCover(game.cover)" class="card-img-top" :alt="game.title" />
 
-                    <div class="card-body">
-                        <h5 class="card-title">{{ game.title }}</h5>
-                        <p class="card-text">{{ game.description }}</p>
+                        <div class="card-body">
+                            <h5 class="card-title">{{ game.title }}</h5>
+                            <p class="card-text">{{ game.description }}</p>
 
-                        <!-- Like + Wishlist Buttons -->
-                        <button class="btn btn-sm" :class="auth.state.currentUser
-                            ? (hasLiked(game.id) ? 'btn-danger' : 'btn-outline-light')
-                            : 'btn-outline-light disabled'" @click="auth.state.currentUser && toggleLike(game)"
-                            :arialabel="hasLiked(game.id) ? `Unlike ${game.title}` : `Like ${game.title}`"
-                            :aria-disabled="!auth.state.currentUser">
-                            {{ auth.state.currentUser && hasLiked(game.id) ? '❤️' : '🤍' }}
-                            {{ game.likes }}
-                        </button>
-                        <div v-if="!auth.state.currentUser" class="login-prompt small">
-                            Login to like
-                        </div>
-                        <div v-if="auth.state.currentUser" class="mt-2">
-                            <button class="btn btn-sm"
-                                :class="wishlistedIds.includes(game.id) ? 'btn-success' : 'btn-outline-success'"
-                                @click="toggleWishlist(game)">
-                                {{ wishlistedIds.includes(game.id) ? 'Wishlisted' : 'Wishlist' }}
+                            <!-- Like + Wishlist Buttons -->
+                            <button class="btn btn-sm" :class="auth.state.currentUser
+                                ? (hasLiked(game.id) ? 'btn-danger' : 'btn-outline-light')
+                                : 'btn-outline-light disabled'" @click="auth.state.currentUser && toggleLike(game)"
+                                :arialabel="hasLiked(game.id) ? `Unlike ${game.title}` : `Like ${game.title}`"
+                                :aria-disabled="!auth.state.currentUser">
+                                {{ auth.state.currentUser && hasLiked(game.id) ? '❤️' : '🤍' }}
+                                {{ game.likes }}
                             </button>
-                        </div>
-                        <!-- Admin controls -->
-                        <div class="mt-3" v-if="isAdmin">
-                            <div v-if="currentlyEditing && currentlyEditing.id === game.id">
-                                <!-- Editable fields -->
-                                <input v-model="currentlyEditing.title" class="form-control mb-2" />
-                                <textarea v-model="currentlyEditing.description" class="form-control mb-2"
-                                    rows="2"></textarea>
-                                <select v-model="currentlyEditing.genre" class="form-select mb-2">
-                                    <option v-for="genre in uniqueGenres" :key="genre" :value="genre">{{ genre }}
-                                    </option>
-                                </select>
-                                <div class="d-flex justify-content-end">
-                                    <button class="btn btn-sm btn-success me-2" @click="saveEdit">Save</button>
-                                    <button class="btn btn-sm btn-secondary" @click="cancelEdit">Cancel</button>
-                                </div>
+                            <div v-if="!auth.state.currentUser" class="login-prompt small">
+                                Login to like
                             </div>
-
-                            <div v-else>
-                                <button class="btn btn-sm btn-warning me-2" @click="editGame(game)">Edit</button>
-                                <button class="btn btn-sm btn-danger" @click="deleteGame(game)">Delete</button>
-                            </div>
-                        </div>
-                        <!-- Reviews -->
-                        <div class="mt-4">
-                            <h6>Reviews</h6>
-
-                            <div v-if="Array.isArray(reviews[game.id]) && reviews[game.id].length">
-                                <div class="mb-3" v-for="(review, idx) in reviews[game.id]" :key="idx">
-                                    <div class="d-flex justify-content-between align-items-center mb-1">
-                                        <span class="review-author">{{ review.name }}</span>
-                                        <span class="review-date">{{ review.date }}</span>
-                                    </div>
-                                    <div class="review-text">{{ review.content }}</div>
-                                    <hr class="my-2" />
-                                </div>
-                            </div>
-                            <div v-else class="no-reviews-text small">No reviews yet.</div>
-
-                            <!-- Button to toggle input -->
-                            <div class="mt-2" v-if="auth.state.currentUser">
-                                <button class="btn btn-sm btn-outline-primary" @click="toggleReviewInput(game.id)">
-                                    {{ reviewInputVisibleMap[game.id] ? 'Cancel' : 'Write a Review' }}
+                            <div v-if="auth.state.currentUser" class="mt-2">
+                                <button class="btn btn-sm"
+                                    :class="wishlistedIds.includes(game.id) ? 'btn-success' : 'btn-outline-success'"
+                                    @click="toggleWishlist(game)">
+                                    {{ wishlistedIds.includes(game.id) ? 'Wishlisted' : 'Wishlist' }}
                                 </button>
+                            </div>
+                            <!-- Admin controls -->
+                            <div class="mt-3" v-if="isAdmin">
+                                <div v-if="currentlyEditing && currentlyEditing.id === game.id">
+                                    <!-- Editable fields -->
+                                    <input v-model="currentlyEditing.title" class="form-control mb-2" />
+                                    <textarea v-model="currentlyEditing.description" class="form-control mb-2"
+                                        rows="2"></textarea>
+                                    <select v-model="currentlyEditing.genre" class="form-select mb-2">
+                                        <option v-for="genre in uniqueGenres" :key="genre" :value="genre">{{ genre }}
+                                        </option>
+                                    </select>
+                                    <div class="d-flex justify-content-end">
+                                        <button class="btn btn-sm btn-success me-2" @click="saveEdit">Save</button>
+                                        <button class="btn btn-sm btn-secondary" @click="cancelEdit">Cancel</button>
+                                    </div>
+                                </div>
 
-                                <!-- Review input -->
-                                <div v-if="reviewInputVisibleMap[game.id]" class="mt-2">
-                                    <textarea v-model="newReviewTextMap[game.id]" class="form-control mb-2" rows="2"
-                                        :aria-label="`Write a review for ${game.title}`"
-                                        placeholder="Write your review..."></textarea>
-                                    <button class="btn btn-sm btn-primary"
-                                        @click="submitReview(game.id)">Submit</button>
+                                <div v-else>
+                                    <button class="btn btn-sm btn-warning me-2" @click="editGame(game)">Edit</button>
+                                    <button class="btn btn-sm btn-danger" @click="deleteGame(game)">Delete</button>
                                 </div>
                             </div>
+                            <!-- Reviews -->
+                            <div class="mt-4">
+                                <h6>Reviews</h6>
 
-                            <div v-else class="login-prompt small">Login to add a review.</div>
+                                <div v-if="Array.isArray(reviews[game.id]) && reviews[game.id].length">
+                                    <div class="mb-3" v-for="(review, idx) in reviews[game.id]" :key="idx">
+                                        <div class="d-flex justify-content-between align-items-center mb-1">
+                                            <span class="review-author">{{ review.name }}</span>
+                                            <span class="review-date">{{ review.date }}</span>
+                                        </div>
+                                        <div class="review-text">{{ review.content }}</div>
+                                        <hr class="my-2" />
+                                    </div>
+                                </div>
+                                <div v-else class="no-reviews-text small">No reviews yet.</div>
+
+                                <!-- Button to toggle input -->
+                                <div class="mt-2" v-if="auth.state.currentUser">
+                                    <button class="btn btn-sm btn-outline-primary" @click="toggleReviewInput(game.id)"
+                                        :aria-label="reviewInputVisibleMap[game.id] ? 'Cancel writing a review' : 'Write a review'">
+                                        {{ reviewInputVisibleMap[game.id] ? 'Cancel' : 'Write a Review' }}
+                                    </button>
+
+                                    <!-- Review input -->
+                                    <div v-if="reviewInputVisibleMap[game.id]" class="mt-2">
+                                        <textarea v-model="newReviewTextMap[game.id]" class="form-control mb-2" rows="2"
+                                            :aria-label="`Write a review for ${game.title}`"
+                                            placeholder="Write your review..."></textarea>
+                                        <button class="btn btn-sm btn-primary"
+                                            @click="submitReview(game.id)">Submit</button>
+                                    </div>
+                                </div>
+                                <div v-else class="login-prompt small">Login to add a review.</div>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
-
-        <!-- Pagination Controls -->
-        <div class="d-flex justify-content-center mt-4 gap-2">
-            <button class="btn btn-outline-light" :disabled="currentPage === 1" @click="prevPage">
-                Previous
-            </button>
-            <button class="btn btn-outline-light" :disabled="currentPage === totalPages" @click="nextPage">
-                Next
-            </button>
-        </div>
-        <transition name="toast">
-            <div v-if="showToast" class="custom-toast" aria-live="assertive">
-                {{ toastMessage }}
-            </div>
-        </transition>
+            </template>
+        </draggable>
     </div>
 </template>
 
 <script>
 import fallbackGames from '../assets/games.json'
 import auth from '../store/auth'
+import draggable from 'vuedraggable'
 import { useDebounce } from '../composables/useDebounce';
 import { reactive, ref, computed, watch, onMounted } from 'vue'
+import { useDragReorder } from '../composables/useDragReorder'
 
 export default {
     name: 'Games',
+    components: { draggable },
     setup() {
         const storageKey = 'gameList'
 
@@ -203,6 +193,7 @@ export default {
         const showToast = ref(false)
         const toastMessage = ref('')
         const debouncedSearch = useDebounce(searchQuery, 500);
+        const { isDragging, onStart, onEnd } = useDragReorder(games)
 
         // List of unique genres from games
         const uniqueGenres = computed(() => {
@@ -528,7 +519,10 @@ export default {
             toggleWishlist,
             wishlistedIds,
             wishlistKey,
-            loadWishlist
+            loadWishlist,
+            isDragging,
+            onStart,
+            onEnd
         }
     }
 }
