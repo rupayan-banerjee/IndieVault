@@ -77,7 +77,6 @@ export default {
 <style scoped>
 .news {
     color: #f2f2f2;
-    /* Base text color on dark background */
 }
 
 /* News card with glassy styling */
@@ -101,10 +100,9 @@ export default {
     color: #ffffff;
 }
 
-/* Subtitle (date + category) */
+/* Subtitle styling */
 .card-subtitle {
     color: #e2dd35 !important;
-    /* Bright yellow for contrast */
 }
 
 /* Glassy buttons used in pagination */

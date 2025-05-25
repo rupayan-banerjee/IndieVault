@@ -31,7 +31,7 @@
               <router-link class="nav-link" to="/about">About</router-link>
             </li>
 
-            <!-- When NOT logged in -->
+            <!-- When not logged in -->
             <template v-if="!isLoggedIn">
               <li class="nav-item">
                 <router-link class="nav-link" to="/login">Login</router-link>
@@ -83,7 +83,7 @@ export default {
     }
 
     return {
-      auth,         // still exporting full auth for debugging or future use
+      auth,
       isLoggedIn,
       currentUser,
       logout
@@ -93,7 +93,7 @@ export default {
 </script>
 
 <style>
-/* ===== Global Page Background ===== */
+/* Global Page Background */
 body {
   margin: 0;
   padding: 0;
@@ -156,7 +156,6 @@ body {
 @media (max-width: 991.98px) {
   .navbar-collapse {
     padding-left: 1.5rem;
-    /* aligns with brand text */
   }
 
   .navbar-nav .nav-link {

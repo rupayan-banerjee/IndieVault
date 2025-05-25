@@ -163,7 +163,6 @@ import { reactive, ref, computed, watch, onMounted } from 'vue'
 export default {
     name: 'Games',
     setup() {
-        // inside setup(), before any use of `games`
         const storageKey = 'gameList'
 
         // Try to load from localStorage (must be an array)
@@ -463,7 +462,7 @@ export default {
         }, { deep: true })
 
         const toggleWishlist = (game) => {
-            if (!auth.state.currentUser) return       // block anon
+            if (!auth.state.currentUser) return
             const i = wishlistedIds.value.indexOf(game.id)
             if (i > -1) {
                 wishlistedIds.value.splice(i, 1)
@@ -563,14 +562,12 @@ export default {
 /* Review section styling */
 .review-author {
     color: #00d1b2;
-    /* teal or light blue for contrast */
     font-weight: 600;
     font-size: 0.95rem;
 }
 
 .review-date {
     color: #aaa;
-    /* light grey for secondary info */
     font-size: 0.8rem;
 }
 
@@ -642,14 +639,12 @@ export default {
 /* Make the login prompt more visible */
 .login-prompt {
     color: #f2f2f2;
-    /* bright enough on dark background */
     font-style: italic;
     opacity: 0.9;
 }
 
 .login-prompt {
     color: #f2f2f2;
-    /* make it bright on dark bg */
     font-style: italic;
     opacity: 0.9;
     margin-top: 0.25rem;
