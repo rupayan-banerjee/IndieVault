@@ -56,9 +56,11 @@
                   aria-current="page">
                   Hi, {{ currentUser.name }}
                 </router-link>
-                <button class="btn btn-sm btn-outline-light" @click="logout">
+              </li>
+              <li class="nav-item">
+                <a href="#" class="nav-link" @click.prevent="logout">
                   Logout
-                </button>
+                </a>
               </li>
             </template>
           </ul>
