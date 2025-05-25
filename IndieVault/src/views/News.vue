@@ -42,38 +42,55 @@
 </template>
 
 <script>
-// Import local JSON data for news
+import { ref, computed, watch } from 'vue'
 import newsData from '../assets/news.json'
+import { useDebounce } from '../composables/useDebounce'
 
 export default {
     name: 'News',
-    data() {
-        return {
-            newsList: newsData,      // Raw news array from JSON
-            searchQuery: '',         // Search input bound here
-            currentPage: 1,          // Current page number
-            itemsPerPage: 4          // How many items to show per page
-        }
-    },
-    computed: {
-        // Filters news based on search input across all fields
-        filteredNews() {
-            const query = this.searchQuery.toLowerCase()
-            return this.newsList.filter(item =>
-                item.title.toLowerCase().includes(query) ||
-                item.content.toLowerCase().includes(query) ||
-                item.category.toLowerCase().includes(query) ||
-                item.date.toLowerCase().includes(query)
+    setup() {
+        // Raw data & state
+        const newsList = ref(newsData)
+        const searchQuery = ref('')
+        const debouncedSearch = useDebounce(searchQuery, 500)
+        const currentPage = ref(1)
+        const itemsPerPage = ref(4)
+
+        // Filtered by debounced search term
+        const filteredNews = computed(() => {
+            const q = debouncedSearch.value.toLowerCase()
+            return newsList.value.filter(item =>
+                item.title.toLowerCase().includes(q) ||
+                item.content.toLowerCase().includes(q) ||
+                item.category.toLowerCase().includes(q) ||
+                item.date.toLowerCase().includes(q)
             )
-        },
-        // Returns only a subset of news items for the current page
-        paginatedNews() {
-            const start = (this.currentPage - 1) * this.itemsPerPage
-            return this.filteredNews.slice(start, start + this.itemsPerPage)
-        },
-        // Calculates how many pages are needed based on filtered results
-        totalPages() {
-            return Math.ceil(this.filteredNews.length / this.itemsPerPage)
+        })
+
+        // Total pages
+        const totalPages = computed(() =>
+            Math.ceil(filteredNews.value.length / itemsPerPage.value)
+        )
+
+        // Paginate
+        const paginatedNews = computed(() => {
+            const start = (currentPage.value - 1) * itemsPerPage.value
+            return filteredNews.value.slice(start, start + itemsPerPage.value)
+        })
+
+        // Reset page if out of range after filtering
+        watch(filteredNews, () => {
+            if (currentPage.value > totalPages.value) {
+                currentPage.value = 1
+            }
+        })
+
+        return {
+            searchQuery,
+            currentPage,
+            filteredNews,
+            paginatedNews,
+            totalPages
         }
     }
 }

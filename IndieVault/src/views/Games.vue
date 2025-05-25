@@ -162,6 +162,7 @@
 <script>
 import fallbackGames from '../assets/games.json'
 import auth from '../store/auth'
+import { useDebounce } from '../composables/useDebounce';
 import { reactive, ref, computed, watch, onMounted } from 'vue'
 
 export default {
@@ -201,6 +202,7 @@ export default {
         const showAddForm = ref(false)
         const showToast = ref(false)
         const toastMessage = ref('')
+        const debouncedSearch = useDebounce(searchQuery, 500);
 
         // List of unique genres from games
         const uniqueGenres = computed(() => {
@@ -209,18 +211,20 @@ export default {
 
         // Computed filtered games
         const filteredGames = computed(() => {
+            const q = debouncedSearch.value.toLowerCase();
+
             return games.value.filter(game => {
                 const matchesSearch =
-                    game.title.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-                    game.description.toLowerCase().includes(searchQuery.value.toLowerCase())
+                    game.title.toLowerCase().includes(q) ||
+                    game.description.toLowerCase().includes(q);
 
                 const matchesGenre = selectedGenre.value
                     ? game.genre === selectedGenre.value
-                    : true
+                    : true;
 
-                return matchesSearch && matchesGenre
-            })
-        })
+                return matchesSearch && matchesGenre;
+            });
+        });
 
         const getCover = (filename) => {
             try {
