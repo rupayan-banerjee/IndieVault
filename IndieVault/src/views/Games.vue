@@ -124,7 +124,7 @@
                                 </div>
                             </div>
 
-                            <div v-else class="text-muted small">Login to add a review.</div>
+                            <div v-else class="login-prompt small">Login to add a review.</div>
                         </div>
                     </div>
                 </div>
@@ -140,6 +140,11 @@
                 Next
             </button>
         </div>
+        <transition name="toast">
+            <div v-if="showToast" class="custom-toast">
+                {{ toastMessage }}
+            </div>
+        </transition>
     </div>
 </template>
 
@@ -152,7 +157,7 @@ export default {
     name: 'Games',
     setup() {
         // inside setup(), before any use of `games`
-        const storageKey = 'indievaultGames'
+        const storageKey = 'gameList'
 
         // Try to load from localStorage (must be an array)
         let initial = []
@@ -174,6 +179,7 @@ export default {
         watch(games, (updated) => {
             localStorage.setItem(storageKey, JSON.stringify(updated))
         }, { deep: true })
+
         const searchQuery = ref('')
         const selectedGenre = ref('')
         const currentlyEditing = ref(null)
@@ -182,6 +188,9 @@ export default {
         const newReviewTextMap = reactive({})
         const reviewInputVisibleMap = reactive({})
         const activeReviewGameId = ref(null)
+        const showAddForm = ref(false)
+        const showToast = ref(false)
+        const toastMessage = ref('')
 
         const likeGame = (game) => {
             game.likes++
@@ -245,8 +254,11 @@ export default {
             const index = games.value.findIndex(g => g.id === game.id)
             if (index !== -1) {
                 games.value.splice(index, 1)
-                localStorage.setItem('gameList', JSON.stringify(games))
+                localStorage.setItem('gameList', JSON.stringify(games.value))
             }
+            toastMessage.value = 'Game deleted successfully'
+            showToast.value = true
+            setTimeout(() => (showToast.value = false), 3000)
         }
 
         const editGame = (game) => {
@@ -259,13 +271,14 @@ export default {
                 games.value.splice(index, 1, { ...currentlyEditing.value })
             }
             currentlyEditing.value = null
+            toastMessage.value = 'Game updated successfully'
+            showToast.value = true
+            setTimeout(() => (showToast.value = false), 3000)
         }
 
         const cancelEdit = () => {
             currentlyEditing.value = null
         }
-
-        const showAddForm = ref(false)
 
         const newGame = reactive({
             title: '',
@@ -274,18 +287,26 @@ export default {
             cover: ''
         })
 
+        const validationErrors = reactive({
+            title: false,
+            description: false,
+            genre: false,
+            cover: false
+        })
+
         const addGame = () => {
-            // Reset all errors
+            // Reset validation errors
             validationErrors.title = !newGame.title.trim()
             validationErrors.description = !newGame.description.trim()
             validationErrors.genre = !newGame.genre.trim()
             validationErrors.cover = !newGame.cover.trim()
 
-            // If any field is still invalid, stop
+            // If any field is invalid, abort
             if (Object.values(validationErrors).some(val => val)) {
                 return
             }
 
+            // Create new game object
             const newId = Math.max(...games.value.map(g => g.id)) + 1
             const gameToAdd = {
                 id: newId,
@@ -297,23 +318,24 @@ export default {
                 wishlisted: false
             }
 
+            // Add to list and persist
             games.value.push(gameToAdd)
-            localStorage.setItem('gameList', JSON.stringify(games))
+            localStorage.setItem('gameList', JSON.stringify(games.value))
 
-            // Reset form
+            // Reset form and close panel
             newGame.title = ''
             newGame.description = ''
             newGame.genre = ''
             newGame.cover = ''
             showAddForm.value = false
-        }
 
-        const validationErrors = reactive({
-            title: false,
-            description: false,
-            genre: false,
-            cover: false
-        })
+            // Show toast notification
+            toastMessage.value = 'New game successfully added'
+            showToast.value = true
+            setTimeout(() => {
+                showToast.value = false
+            }, 3000)
+        }
 
         const submitReview = (gameId) => {
             const text = newReviewTextMap[gameId]?.trim()
@@ -344,6 +366,10 @@ export default {
             newReviewTextMap[gameId] = ''
             reviewInputVisibleMap[gameId] = false
             activeReviewGameId.value = null
+
+            toastMessage.value = 'Review added successfully'
+            showToast.value = true
+            setTimeout(() => (showToast.value = false), 3000)
         }
 
         const toggleReviewInput = (gameId) => {
@@ -390,7 +416,9 @@ export default {
             toggleReviewInput,
             newReviewTextMap,
             reviewInputVisibleMap,
-            activeReviewGameId
+            activeReviewGameId,
+            showToast,
+            toastMessage
         }
     }
 }
@@ -481,5 +509,38 @@ export default {
     outline: none;
     border-color: rgba(255, 255, 255, 0.4);
     background-color: rgba(255, 255, 255, 0.08);
+}
+
+/* Toast styles */
+.custom-toast {
+    position: fixed;
+    bottom: 1rem;
+    right: 1rem;
+    background: rgba(0, 0, 0, 0.7);
+    color: #fff;
+    padding: 0.75rem 1.25rem;
+    border-radius: 0.5rem;
+    backdrop-filter: blur(4px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+    z-index: 1050;
+}
+
+/* Fade transition */
+.toast-enter-active,
+.toast-leave-active {
+    transition: opacity 0.4s ease;
+}
+
+.toast-enter-from,
+.toast-leave-to {
+    opacity: 0;
+}
+
+/* Make the login prompt more visible */
+.login-prompt {
+    color: #f2f2f2;
+    /* bright enough on dark background */
+    font-style: italic;
+    opacity: 0.9;
 }
 </style>
