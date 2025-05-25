@@ -232,6 +232,12 @@ export default {
             });
         });
 
+        watch(filteredGames, () => {
+            if (currentPage.value > totalPages.value) {
+                currentPage.value = 1;
+            }
+        });
+
         const getCover = (filename) => {
             try {
                 return new URL(`../assets/${filename}`, import.meta.url).href
