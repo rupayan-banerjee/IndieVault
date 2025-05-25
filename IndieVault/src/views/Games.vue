@@ -53,7 +53,7 @@
         </div>
 
         <!-- Game grid -->
-        <draggable v-model="games" tag="div" class="row" item-key="id" @start="onStart" @end="onEnd">
+        <draggable v-model="paginatedList" tag="div" class="row" item-key="id" @start="onStart" @end="onEnd">
             <template #item="{ element: game }">
                 <div class="col-md-4 mb-4" :key="game.id">
                     <div class="card h-100 glass-card">
@@ -232,6 +232,17 @@ export default {
             const start = (currentPage.value - 1) * itemsPerPage
             return filteredGames.value.slice(start, start + itemsPerPage)
         })
+
+        const paginatedList = computed({
+            get() {
+                return paginatedGames.value;
+            },
+            set(newPageOrder) {
+                const start = (currentPage.value - 1) * itemsPerPage;
+                // Splice out the old page and insert the new order in-place
+                games.value.splice(start, newPageOrder.length, ...newPageOrder);
+            }
+        });
 
         const totalPages = computed(() =>
             Math.ceil(filteredGames.value.length / itemsPerPage)
@@ -487,7 +498,7 @@ export default {
             filteredGames,
             currentPage,
             itemsPerPage,
-            paginatedGames,
+            paginatedList,
             totalPages,
             nextPage,
             prevPage,
