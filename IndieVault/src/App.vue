@@ -76,8 +76,8 @@
 </template>
 
 <script>
-import { useRouter } from 'vue-router'
-import { computed } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
+import { computed, onMounted } from 'vue'
 import auth from './store/auth'
 
 export default {
@@ -86,6 +86,13 @@ export default {
     const isLoggedIn = computed(() => auth.isLoggedIn.value)
     const currentUser = computed(() => auth.state.currentUser)
     const router = useRouter()
+    const route = useRoute()
+
+    onMounted(() => {
+    if (route.path === '/') {
+      router.push('/home'); // change to your default route
+    }
+    });
 
     const logout = () => {
       auth.logout()
