@@ -2,9 +2,63 @@
     <div class="games">
         <h2 class="text-center mb-4">Discover Indie Games</h2>
 
+        <!-- Filter Section -->
+        <div class="row mb-4">
+            <div class="col-md-6 mb-2">
+                <input type="text" v-model="searchQuery" class="form-control"
+                    placeholder="Search by title or description" />
+            </div>
+            <div class="col-md-6 mb-2">
+                <select v-model="selectedGenre" class="form-select">
+                    <option value="">All Genres</option>
+                    <option v-for="genre in uniqueGenres" :key="genre" :value="genre">
+                        {{ genre }}
+                    </option>
+                </select>
+            </div>
+        </div>
+
+        <div class="mb-4 text-end" v-if="isAdmin">
+            <button class="btn btn-outline-light" @click="showAddForm = !showAddForm">
+                {{ showAddForm ? 'Cancel' : '➕ Add New Game' }}
+            </button>
+        </div>
+
+        <!-- Admin-only game creation form -->
+        <div class="glass-card game-form p-4 mb-4" v-if="isAdmin && showAddForm">
+            <h4 class="mb-3">Add New Game</h4>
+            <form @submit.prevent="addGame">
+                <div class="mb-2">
+                    <label class="form-label">Title</label>
+                    <input v-model="newGame.title" class="form-control"
+                        :class="{ 'is-invalid': validationErrors.title }" />
+                    <div class="invalid-feedback">Title is required.</div>
+                </div>
+                <div class="mb-2">
+                    <label class="form-label">Description</label>
+                    <textarea v-model="newGame.description" class="form-control"
+                        :class="{ 'is-invalid': validationErrors.description }"></textarea>
+                    <div class="invalid-feedback">Description is required.</div>
+                </div>
+                <div class="mb-2">
+                    <label class="form-label">Genre</label>
+                    <input v-model="newGame.genre" class="form-control"
+                        :class="{ 'is-invalid': validationErrors.genre }" />
+                    <div class="invalid-feedback">Genre is required.</div>
+                </div>
+                <div class="mb-2">
+                    <label class="form-label">Cover Image Filename (e.g., game.png)</label>
+                    <input v-model="newGame.cover" class="form-control"
+                        :class="{ 'is-invalid': validationErrors.cover }" />
+                    <div class="invalid-feedback">Cover filename is required.</div>
+                </div>
+                <button class="btn btn-success mt-2" type="submit">Add Game</button>
+            </form>
+        </div>
+
         <!-- Game grid -->
         <div class="row">
-            <div class="col-md-4 mb-4" v-for="game in games" :key="game.id">
+            <div class="col-md-4 mb-4" v-for="game in paginatedGames" :key="game.id">
                 <div class="card h-100 glass-card">
                     <img :src="getCover(game.cover)" class="card-img-top" :alt="game.title" />
 
@@ -22,22 +76,95 @@
                                 {{ game.wishlisted ? 'Wishlisted' : 'Wishlist' }}
                             </button>
                         </div>
+                        <!-- Admin controls -->
+                        <div class="mt-3" v-if="isAdmin">
+                            <div v-if="currentlyEditing && currentlyEditing.id === game.id">
+                                <!-- Editable fields -->
+                                <input v-model="currentlyEditing.title" class="form-control mb-2" />
+                                <textarea v-model="currentlyEditing.description" class="form-control mb-2"
+                                    rows="2"></textarea>
+                                <select v-model="currentlyEditing.genre" class="form-select mb-2">
+                                    <option v-for="genre in uniqueGenres" :key="genre" :value="genre">{{ genre }}
+                                    </option>
+                                </select>
+                                <div class="d-flex justify-content-end">
+                                    <button class="btn btn-sm btn-success me-2" @click="saveEdit">Save</button>
+                                    <button class="btn btn-sm btn-secondary" @click="cancelEdit">Cancel</button>
+                                </div>
+                            </div>
+
+                            <div v-else>
+                                <button class="btn btn-sm btn-warning me-2" @click="editGame(game)">Edit</button>
+                                <button class="btn btn-sm btn-danger" @click="deleteGame(game)">Delete</button>
+                            </div>
+                        </div>
+                        <!-- Reviews -->
+                        <div class="mt-4">
+                            <h6>Reviews</h6>
+
+                            <div v-if="Array.isArray(reviews[game.id]) && reviews[game.id].length">
+                                <div class="mb-3" v-for="(review, idx) in reviews[game.id]" :key="idx">
+                                    <div class="d-flex justify-content-between align-items-center mb-1">
+                                        <span class="review-author">{{ review.name }}</span>
+                                        <span class="review-date">{{ review.date }}</span>
+                                    </div>
+                                    <div class="review-text">{{ review.content }}</div>
+                                    <hr class="my-2" />
+                                </div>
+                            </div>
+                            <div v-else class="no-reviews-text small">No reviews yet.</div>
+
+                            <!-- Button to toggle input -->
+                            <div class="mt-2" v-if="auth.state.currentUser">
+                                <button class="btn btn-sm btn-outline-primary" @click="toggleReviewInput(game.id)">
+                                    {{ reviewInputVisibleMap[game.id] ? 'Cancel' : 'Write a Review' }}
+                                </button>
+
+                                <!-- Review input -->
+                                <div v-if="reviewInputVisibleMap[game.id]" class="mt-2">
+                                    <textarea v-model="newReviewTextMap[game.id]" class="form-control mb-2" rows="2"
+                                        placeholder="Write your review..."></textarea>
+                                    <button class="btn btn-sm btn-primary"
+                                        @click="submitReview(game.id)">Submit</button>
+                                </div>
+                            </div>
+
+                            <div v-else class="text-muted small">Login to add a review.</div>
+                        </div>
                     </div>
                 </div>
             </div>
+        </div>
+
+        <!-- Pagination Controls -->
+        <div class="d-flex justify-content-center mt-4 gap-2">
+            <button class="btn btn-outline-light" :disabled="currentPage === 1" @click="prevPage">
+                Previous
+            </button>
+            <button class="btn btn-outline-light" :disabled="currentPage === totalPages" @click="nextPage">
+                Next
+            </button>
         </div>
     </div>
 </template>
 
 <script>
 import gameData from '../assets/games.json'
-import { reactive } from 'vue'
+import auth from '../store/auth'
+import { reactive, ref, computed, watch } from 'vue'
 
 export default {
     name: 'Games',
     setup() {
-        // Create a reactive copy so likes/wishlist update live
         const games = reactive(gameData.map(g => ({ ...g })))
+        const searchQuery = ref('')
+        const selectedGenre = ref('')
+        const currentlyEditing = ref(null)
+        const reviews = reactive(JSON.parse(localStorage.getItem('gameReviews')) || {})
+        const newReviewText = ref('')
+        const newReviewTextMap = reactive({})
+        const reviewInputVisibleMap = reactive({})
+        const activeReviewGameId = ref(null)
 
         const likeGame = (game) => {
             game.likes++
@@ -47,28 +174,219 @@ export default {
             game.wishlisted = !game.wishlisted
         }
 
+        // List of unique genres from games
+        const uniqueGenres = computed(() => {
+            const genres = games.map(g => g.genre)
+            return [...new Set(genres)]
+        })
+
+        // Computed filtered games
+        const filteredGames = computed(() => {
+            return games.filter(game => {
+                const matchesSearch =
+                    game.title.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
+                    game.description.toLowerCase().includes(searchQuery.value.toLowerCase())
+
+                const matchesGenre = selectedGenre.value
+                    ? game.genre === selectedGenre.value
+                    : true
+
+                return matchesSearch && matchesGenre
+            })
+        })
+
         const getCover = (filename) => {
             try {
                 return new URL(`../assets/${filename}`, import.meta.url).href
             } catch {
-                return '' // fallback or default image path
+                return ''
             }
         }
+
+        const currentPage = ref(1)
+        const itemsPerPage = 6
+
+        const paginatedGames = computed(() => {
+            const start = (currentPage.value - 1) * itemsPerPage
+            return filteredGames.value.slice(start, start + itemsPerPage)
+        })
+
+        const totalPages = computed(() =>
+            Math.ceil(filteredGames.value.length / itemsPerPage)
+        )
+
+        const nextPage = () => {
+            if (currentPage.value < totalPages.value) currentPage.value++
+        }
+
+        const prevPage = () => {
+            if (currentPage.value > 1) currentPage.value--
+        }
+
+        const isAdmin = computed(() => auth.state.currentUser?.role === 'admin')
+
+        const deleteGame = (game) => {
+            const index = games.findIndex(g => g.id === game.id)
+            if (index !== -1) {
+                games.splice(index, 1)
+                localStorage.setItem('gameList', JSON.stringify(games))
+            }
+        }
+
+        const editGame = (game) => {
+            currentlyEditing.value = { ...game }
+        }
+
+        const saveEdit = () => {
+            const index = games.findIndex(g => g.id === currentlyEditing.value.id)
+            if (index !== -1) {
+                games[index] = { ...currentlyEditing.value }
+                localStorage.setItem('gameList', JSON.stringify(games))
+            }
+            currentlyEditing.value = null
+        }
+
+        const cancelEdit = () => {
+            currentlyEditing.value = null
+        }
+
+        const showAddForm = ref(false)
+
+        const newGame = reactive({
+            title: '',
+            description: '',
+            genre: '',
+            cover: ''
+        })
+
+        const addGame = () => {
+            // Reset all errors
+            validationErrors.title = !newGame.title.trim()
+            validationErrors.description = !newGame.description.trim()
+            validationErrors.genre = !newGame.genre.trim()
+            validationErrors.cover = !newGame.cover.trim()
+
+            // If any field is still invalid, stop
+            if (Object.values(validationErrors).some(val => val)) {
+                return
+            }
+
+            const newId = Math.max(...games.map(g => g.id)) + 1
+            const gameToAdd = {
+                id: newId,
+                title: newGame.title.trim(),
+                description: newGame.description.trim(),
+                genre: newGame.genre.trim(),
+                cover: newGame.cover.trim(),
+                likes: 0,
+                wishlisted: false
+            }
+
+            games.push(gameToAdd)
+            localStorage.setItem('gameList', JSON.stringify(games))
+
+            // Reset form
+            newGame.title = ''
+            newGame.description = ''
+            newGame.genre = ''
+            newGame.cover = ''
+            showAddForm.value = false
+        }
+
+        const validationErrors = reactive({
+            title: false,
+            description: false,
+            genre: false,
+            cover: false
+        })
+
+        const submitReview = (gameId) => {
+            const text = newReviewTextMap[gameId]?.trim()
+            if (!text || !auth.state.currentUser) return
+
+            const review = {
+                name: auth.state.currentUser.name,
+                content: text,
+                date: new Date().toLocaleDateString()
+            }
+
+            // Ensure reactivity by creating a shallow clone
+            const updatedReviews = { ...reviews }
+
+            if (!updatedReviews[gameId]) {
+                updatedReviews[gameId] = []
+            }
+
+            updatedReviews[gameId].push(review)
+
+            // Reassign to reactive `reviews`
+            Object.assign(reviews, updatedReviews)
+
+            // Persist
+            localStorage.setItem('gameReviews', JSON.stringify(updatedReviews))
+
+            // Clear input
+            newReviewTextMap[gameId] = ''
+            reviewInputVisibleMap[gameId] = false
+            activeReviewGameId.value = null
+        }
+
+        const toggleReviewInput = (gameId) => {
+            reviewInputVisibleMap[gameId] = !reviewInputVisibleMap[gameId]
+            if (!newReviewTextMap[gameId]) {
+                newReviewTextMap[gameId] = ''
+            }
+            activeReviewGameId.value = reviewInputVisibleMap[gameId] ? gameId : null
+        }
+
+        watch(reviews, () => {
+            localStorage.setItem('gameReviews', JSON.stringify({ ...reviews }))
+        }, { deep: true })
 
         return {
             games,
             likeGame,
             toggleWishlist,
-            getCover
+            getCover,
+            searchQuery,
+            selectedGenre,
+            uniqueGenres,
+            filteredGames,
+            currentPage,
+            itemsPerPage,
+            paginatedGames,
+            totalPages,
+            nextPage,
+            prevPage,
+            isAdmin,
+            deleteGame,
+            editGame,
+            currentlyEditing,
+            saveEdit,
+            cancelEdit,
+            showAddForm,
+            newGame,
+            addGame,
+            validationErrors,
+            submitReview,
+            reviews,
+            newReviewText,
+            auth,
+            toggleReviewInput,
+            newReviewTextMap,
+            reviewInputVisibleMap,
+            activeReviewGameId
         }
     }
 }
+
 </script>
 
 <style scoped>
 .games {
     color: #f2f2f2;
     padding-top: 2rem;
+    padding-bottom: 2rem;
 }
 
 /* Card style */
@@ -88,5 +406,36 @@ export default {
 .card-img-top {
     max-height: 200px;
     object-fit: cover;
+}
+
+/* Prevent hover pop-out for admin form */
+.game-form:hover {
+    transform: none !important;
+    box-shadow: none !important;
+}
+
+/* Review section styling */
+.review-author {
+    color: #00d1b2;
+    /* teal or light blue for contrast */
+    font-weight: 600;
+    font-size: 0.95rem;
+}
+
+.review-date {
+    color: #aaa;
+    /* light grey for secondary info */
+    font-size: 0.8rem;
+}
+
+.review-text {
+    color: #f0f0f0;
+    font-size: 0.95rem;
+    margin-bottom: 0.5rem;
+}
+
+.no-reviews-text {
+    color: #bbb;
+    font-style: italic;
 }
 </style>
