@@ -5,31 +5,36 @@
 
         <!-- Search box to filter news by keyword -->
         <input v-model="searchQuery" type="text" class="form-control mb-4"
-            placeholder="Search news by title, content, date, or category" />
+            placeholder="Search news by title, content, date, or category" aria-label="Search news" />
 
         <!-- News cards list -->
         <div class="row">
             <!-- Each card represents a news item -->
             <div class="col-md-6 mb-4" v-for="item in paginatedNews" :key="item.title">
-                <div class="card shadow-sm h-100">
+                <article class="card shadow-sm h-100"
+                    :aria-labelledby="'news-title-' + item.title.replace(/\s+/g, '-')">
                     <div class="card-body">
-                        <h5 class="card-title">{{ item.title }}</h5>
+                        <h5 class="card-title" :id="'news-title-' + item.title.replace(/\s+/g, '-')">
+                            {{ item.title }}
+                        </h5>
                         <h6 class="card-subtitle mb-2 text-muted">{{ item.date }} | {{ item.category }}</h6>
                         <p class="card-text">{{ item.content }}</p>
                     </div>
-                </div>
+                </article>
             </div>
         </div>
 
         <!-- Pagination buttons -->
         <div class="d-flex justify-content-center mt-4">
             <!-- Go to previous page if not on first -->
-            <button class="btn btn-outline-primary me-2" :disabled="currentPage === 1" @click="currentPage--">
+            <button class="btn btn-outline-primary me-2" :disabled="currentPage === 1" @click="currentPage--"
+                aria-label="Go to previous page">
                 Previous
             </button>
 
             <!-- Go to next page if not on last -->
-            <button class="btn btn-outline-primary" :disabled="currentPage === totalPages" @click="currentPage++">
+            <button class="btn btn-outline-primary" :disabled="currentPage === totalPages" @click="currentPage++"
+                aria-label="Go to next page">
                 Next
             </button>
         </div>
@@ -77,7 +82,6 @@ export default {
 <style scoped>
 .news {
     color: #f2f2f2;
-    /* Base text color on dark background */
 }
 
 /* News card with glassy styling */
@@ -101,10 +105,9 @@ export default {
     color: #ffffff;
 }
 
-/* Subtitle (date + category) */
+/* Subtitle styling */
 .card-subtitle {
     color: #e2dd35 !important;
-    /* Bright yellow for contrast */
 }
 
 /* Glassy buttons used in pagination */

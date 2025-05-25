@@ -7,7 +7,8 @@
                 <h1 class="display-5 fw-bold hero-title">Welcome to IndieVault!</h1>
                 <!-- Short welcoming description -->
                 <p class="lead hero-subtext">
-                    This is just the starting point of something much more exciting.
+                    Your ultimate destination for indie games, news, and community. Explore, play, and connect with
+                    fellow gamers.
                 </p>
             </div>
         </section>
@@ -19,14 +20,16 @@
                     <!-- First image card -->
                     <div class="col-md-5 col-sm-8 mb-4">
                         <div class="card image-card border-0">
-                            <img src="../assets/image1.jpg" class="card-img-top rounded" alt="Gaming Controller 1" />
+                            <img src="../assets/image1.jpg" class="card-img-top rounded"
+                                alt="Gameplay of the game Hades" />
                         </div>
                     </div>
 
                     <!-- Second image card -->
                     <div class="col-md-5 col-sm-8 mb-4">
                         <div class="card image-card border-0">
-                            <img src="../assets/image2.jpg" class="card-img-top rounded" alt="Gaming Controller 2" />
+                            <img src="../assets/image2.jpg" class="card-img-top rounded"
+                                alt="Gameplay of the game Stardew Valley" />
                         </div>
                     </div>
                 </div>

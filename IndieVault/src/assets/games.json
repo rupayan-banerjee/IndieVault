@@ -1,0 +1,92 @@
+[
+  {
+    "id": 1,
+    "title": "Hollow Depths",
+    "description": "Explore mysterious underground ruins in this pixel-art metroidvania.",
+    "genre": "Action",
+    "cover": "hollow.png",
+    "likes": 0,
+    "wishlisted": false
+  },
+  {
+    "id": 2,
+    "title": "SketchScape",
+    "description": "A cozy life simulator where you paint the world around you.",
+    "genre": "Simulation",
+    "cover": "sketch.png",
+    "likes": 0,
+    "wishlisted": false
+  },
+  {
+    "id": 3,
+    "title": "BitRacer",
+    "description": "Fast-paced 8-bit inspired racing with local multiplayer.",
+    "genre": "Racing",
+    "cover": "bitracer.png",
+    "likes": 0,
+    "wishlisted": false
+  },
+  {
+    "id": 4,
+    "title": "Pixel Quest",
+    "description": "An adventure platformer with charming pixel art and challenging levels.",
+    "genre": "Platformer",
+    "cover": "pixel.png",
+    "likes": 0,
+    "wishlisted": false
+  },
+  {
+    "id": 5,
+    "title": "Dungeon Delve",
+    "description": "A roguelike dungeon crawler with procedurally generated levels.",
+    "genre": "RPG",
+    "cover": "dungeon.png",
+    "likes": 0,
+    "wishlisted": false
+  },
+  {
+    "id": 6,
+    "title": "Retro Space Shooter",
+    "description": "Classic arcade-style space shooter with modern twists.",
+    "genre": "Shooter",
+    "cover": "spaceshooter.png",
+    "likes": 0,
+    "wishlisted": false
+  },
+  {
+    "id": 7,
+    "title": "Mystic Forest",
+    "description": "A narrative-driven adventure set in a magical forest.",
+    "genre": "Adventure",
+    "cover": "mysticforest.png",
+    "likes": 0,
+    "wishlisted": false
+  },
+  {
+    "id": 8,
+    "title": "Cyber City Brawl",
+    "description": "Beat 'em up action in a neon-lit cyberpunk city.",
+    "genre": "Action",
+    "cover": "cybercity.png",
+    "likes": 0,
+    "wishlisted": false
+  },
+  {
+    "id": 9,
+    "title": "Puzzle Paradise",
+    "description": "A collection of mind-bending puzzles with a relaxing atmosphere.",
+    "genre": "Puzzle",
+    "cover": "puzzle.png",
+    "likes": 0,
+    "wishlisted": false
+  },
+  {
+    "id": 10,
+    "title": "Galactic Explorer",
+    "description": "Explore distant planets and uncover their secrets in this space exploration game.",
+    "genre": "Exploration",
+    "cover": "explorer.png",
+    "likes": 0,
+    "wishlisted": false
+  }
+]
