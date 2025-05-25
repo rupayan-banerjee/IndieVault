@@ -196,7 +196,6 @@ export default {
             localStorage.setItem(storageKey, JSON.stringify(updated))
         }, { deep: true })
 
-        const searchQuery = ref('')
         const selectedGenre = ref('')
         const currentlyEditing = ref(null)
         const reviews = reactive(JSON.parse(localStorage.getItem('gameReviews')) || {})
@@ -207,6 +206,7 @@ export default {
         const showAddForm = ref(false)
         const showToast = ref(false)
         const toastMessage = ref('')
+        const searchQuery = ref('')
         const debouncedSearch = useDebounce(searchQuery, 500);
         const { isDragging, onStart, onEnd } = useDragReorder(games)
 
