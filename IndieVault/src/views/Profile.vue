@@ -17,7 +17,7 @@
                 </article>
             </div>
         </div>
-        <div v-else class="text-muted" role="alert" aria-live="polite">
+        <div v-else role="alert" aria-live="polite">
             You have no games in your wishlist.
         </div>
     </div>
@@ -39,13 +39,20 @@ export default {
         const saved = JSON.parse(localStorage.getItem(storageKey)) || fallbackGames
         const gamesList = ref(saved)
 
-        // Load this user’s wishlist IDs
-        const wishlistKey = `wishlistGames_${user.name}`
-        const wishIds = JSON.parse(localStorage.getItem(wishlistKey)) || []
+        // Reactive list of wishlist IDs for the *current* user
+        const wishlistIds = computed(() => {
+            const key = `wishlistGames_${user.value.name}`
+            try {
+                const raw = localStorage.getItem(key)
+                return raw ? JSON.parse(raw) : []
+            } catch {
+                return []
+            }
+        })
 
-        // Compute the actual games in the wishlist
+        // Compute the actual games in the wishlist by ID
         const wishlistGames = computed(() =>
-            gamesList.value.filter(g => g.wishlisted)
+            gamesList.value.filter(g => wishlistIds.value.includes(g.id))
         )
 
         // Helper to resolve cover image (static asset path)
