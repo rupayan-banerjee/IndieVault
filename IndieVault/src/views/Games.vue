@@ -62,13 +62,21 @@
                         <p class="card-text">{{ game.description }}</p>
 
                         <!-- Like + Wishlist Buttons -->
-                        <div class="d-flex justify-content-between">
-                            <button class="btn btn-sm btn-outline-light" @click="likeGame(game)">
-                                ❤️ {{ game.likes }}
-                            </button>
-                            <button class="btn btn-sm" :class="game.wishlisted ? 'btn-success' : 'btn-outline-success'"
+                        <button class="btn btn-sm" :class="auth.state.currentUser
+                            ? (hasLiked(game.id) ? 'btn-danger' : 'btn-outline-light')
+                            : 'btn-outline-light disabled'" @click="auth.state.currentUser && toggleLike(game)"
+                            :aria-disabled="!auth.state.currentUser">
+                            {{ auth.state.currentUser && hasLiked(game.id) ? '❤️' : '🤍' }}
+                            {{ game.likes }}
+                        </button>
+                        <div v-if="!auth.state.currentUser" class="login-prompt small">
+                            Login to like
+                        </div>
+                        <div v-if="auth.state.currentUser" class="mt-2">
+                            <button class="btn btn-sm"
+                                :class="wishlistedIds.includes(game.id) ? 'btn-success' : 'btn-outline-success'"
                                 @click="toggleWishlist(game)">
-                                {{ game.wishlisted ? 'Wishlisted' : 'Wishlist' }}
+                                {{ wishlistedIds.includes(game.id) ? 'Wishlisted' : 'Wishlist' }}
                             </button>
                         </div>
                         <!-- Admin controls -->
@@ -151,7 +159,7 @@
 <script>
 import fallbackGames from '../assets/games.json'
 import auth from '../store/auth'
-import { reactive, ref, computed, watch } from 'vue'
+import { reactive, ref, computed, watch, onMounted } from 'vue'
 
 export default {
     name: 'Games',
@@ -191,14 +199,6 @@ export default {
         const showAddForm = ref(false)
         const showToast = ref(false)
         const toastMessage = ref('')
-
-        const likeGame = (game) => {
-            game.likes++
-        }
-
-        const toggleWishlist = (game) => {
-            game.wishlisted = !game.wishlisted
-        }
 
         // List of unique genres from games
         const uniqueGenres = computed(() => {
@@ -384,10 +384,105 @@ export default {
             localStorage.setItem('gameReviews', JSON.stringify({ ...reviews }))
         }, { deep: true })
 
+        const likedGameIds = ref([])
+        const likedKey = ref(null)
+
+        const loadLiked = () => {
+            const user = auth.state.currentUser?.name
+            if (user) {
+                likedKey.value = `likedGames_${user}`
+                try {
+                    likedGameIds.value = JSON.parse(localStorage.getItem(likedKey.value)) || []
+                } catch {
+                    likedGameIds.value = []
+                }
+            } else {
+                likedKey.value = null
+                likedGameIds.value = []
+            }
+        }
+
+        // load on mount and whenever user changes
+        onMounted(loadLiked)
+        watch(() => auth.state.currentUser, loadLiked)
+
+        // persist whenever IDs change
+        watch(likedGameIds, (ids) => {
+            if (likedKey.value) localStorage.setItem(likedKey.value, JSON.stringify(ids))
+        }, { deep: true })
+
+        const toggleLike = (game) => {
+            if (!auth.state.currentUser) return  // block non-logged-in
+
+            const i = likedGameIds.value.indexOf(game.id)
+            if (i > -1) {
+                likedGameIds.value.splice(i, 1)
+                game.likes--
+            } else {
+                likedGameIds.value.push(game.id)
+                game.likes++
+            }
+
+            // persist gameList as before
+            localStorage.setItem('gameList', JSON.stringify(games.value))
+
+            // toast
+            toastMessage.value = i > -1
+                ? 'Like removed'
+                : 'Game liked!'
+            showToast.value = true
+            setTimeout(() => showToast.value = false, 3000)
+        }
+
+        const hasLiked = (id) => likedGameIds.value.includes(id)
+
+        const wishlistKey = ref(null)
+        const wishlistedIds = ref([])
+
+        const loadWishlist = () => {
+            const user = auth.state.currentUser?.name
+            if (user) {
+                wishlistKey.value = `wishlistGames_${user}`
+                try {
+                    wishlistedIds.value = JSON.parse(localStorage.getItem(wishlistKey.value)) || []
+                } catch {
+                    wishlistedIds.value = []
+                }
+            } else {
+                wishlistKey.value = null
+                wishlistedIds.value = []
+            }
+        }
+
+        onMounted(loadWishlist)
+        watch(() => auth.state.currentUser, loadWishlist)
+
+        watch(wishlistedIds, ids => {
+            if (wishlistKey.value) {
+                localStorage.setItem(wishlistKey.value, JSON.stringify(ids))
+            }
+        }, { deep: true })
+
+        const toggleWishlist = (game) => {
+            if (!auth.state.currentUser) return       // block anon
+            const i = wishlistedIds.value.indexOf(game.id)
+            if (i > -1) {
+                wishlistedIds.value.splice(i, 1)
+                toastMessage.value = 'Removed from wishlist'
+            } else {
+                wishlistedIds.value.push(game.id)
+                toastMessage.value = 'Added to wishlist'
+            }
+            // update your games list if you store wishlisted there:
+            game.wishlisted = wishlistedIds.value.includes(game.id)
+            localStorage.setItem('gameList', JSON.stringify(games.value))
+
+            showToast.value = true
+            setTimeout(() => showToast.value = false, 3000)
+        }
+
         return {
             games,
-            likeGame,
-            toggleWishlist,
             getCover,
             searchQuery,
             selectedGenre,
@@ -418,7 +513,16 @@ export default {
             reviewInputVisibleMap,
             activeReviewGameId,
             showToast,
-            toastMessage
+            toastMessage,
+            toggleLike,
+            hasLiked,
+            likedGameIds,
+            likedKey,
+            loadLiked,
+            toggleWishlist,
+            wishlistedIds,
+            wishlistKey,
+            loadWishlist
         }
     }
 }
@@ -542,5 +646,13 @@ export default {
     /* bright enough on dark background */
     font-style: italic;
     opacity: 0.9;
+}
+
+.login-prompt {
+    color: #f2f2f2;
+    /* make it bright on dark bg */
+    font-style: italic;
+    opacity: 0.9;
+    margin-top: 0.25rem;
 }
 </style>
