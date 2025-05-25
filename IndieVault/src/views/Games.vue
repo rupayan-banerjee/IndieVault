@@ -143,6 +143,21 @@
                 </div>
             </template>
         </draggable>
+
+        <!-- Pagination Controls -->
+        <div class="d-flex justify-content-center mt-4 gap-2">
+            <button class="btn btn-outline-light" :disabled="currentPage === 1" @click="prevPage">
+                Previous
+            </button>
+            <button class="btn btn-outline-light" :disabled="currentPage === totalPages" @click="nextPage">
+                Next
+            </button>
+        </div>
+        <transition name="toast">
+            <div v-if="showToast" class="custom-toast" aria-live="assertive">
+                {{ toastMessage }}
+            </div>
+        </transition>
     </div>
 </template>
 
