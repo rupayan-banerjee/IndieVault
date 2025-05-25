@@ -88,5 +88,95 @@
     "cover": "explorer.png",
     "likes": 0,
     "wishlisted": false
+  },
+  {
+    "id": 11,
+    "title": "Time Traveler",
+    "description": "A narrative adventure where you solve puzzles across different time periods.",
+    "genre": "Adventure",
+    "cover": "timetravel.png",
+    "likes": 0,
+    "wishlisted": false
+  },
+  {
+    "id": 12,
+    "title": "Pixel Chef",
+    "description": "Cook and serve pixelated dishes in this fun cooking simulator.",
+    "genre": "Simulation",
+    "cover": "pixelchef.png",
+    "likes": 0,
+    "wishlisted": false
+  },
+  {
+    "id": 13,
+    "title": "Rogue Galaxy",
+    "description": "A space RPG with turn-based combat and deep character customization.",
+    "genre": "RPG",
+    "cover": "galaxy.png",
+    "likes": 0,
+    "wishlisted": false
+  },
+  {
+    "id": 14,
+    "title": "Neon Drift",
+    "description": "A futuristic racing game with neon visuals and synthwave soundtrack.",
+    "genre": "Racing",
+    "cover": "drift.png",
+    "likes": 0,
+    "wishlisted": false
+  },
+  {
+    "id": 15,
+    "title": "Castle Siege",
+    "description": "Defend your castle from waves of enemies in this strategic tower defense game.",
+    "genre": "Strategy",
+    "cover": "siege.png",
+    "likes": 0,
+    "wishlisted": false
+  },
+  {
+    "id": 16,
+    "title": "Pixel Painter",
+    "description": "Create beautiful pixel art and share it with the community.",
+    "genre": "Creative",
+    "cover": "pixelpainter.png",
+    "likes": 0,
+    "wishlisted": false
+  },
+  {
+    "id": 17,
+    "title": "Underwater Odyssey",
+    "description": "Dive into the depths of the ocean and discover its wonders.",
+    "genre": "Exploration",
+    "cover": "underwater.png",
+    "likes": 0,
+    "wishlisted": false
+  },
+  {
+    "id": 18,
+    "title": "Monster Hunter Quest",
+    "description": "Hunt down mythical creatures in a vast open world.",
+    "genre": "RPG",
+    "cover": "monsterhunter.png",
+    "likes": 0,
+    "wishlisted": false
+  },
+  {
+    "id": 19,
+    "title": "Space Colony Builder",
+    "description": "Build and manage your own space colony on distant planets.",
+    "genre": "Simulation",
+    "cover": "spacecolony.png",
+    "likes": 0,
+    "wishlisted": false
+  },
+  {
+    "id": 20,
+    "title": "Retro Rhythm Battle",
+    "description": "A rhythm-based fighting game with retro music and visuals.",
+    "genre": "Rhythm",
+    "cover": "rhythm.png",
+    "likes": 0,
+    "wishlisted": false
   }
 ]
